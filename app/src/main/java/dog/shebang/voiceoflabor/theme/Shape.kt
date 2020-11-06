@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.ui
+package dog.shebang.voiceoflabor.theme
 
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Shapes

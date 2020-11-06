@@ -8,7 +8,7 @@ import androidx.compose.material.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
 import androidx.ui.tooling.preview.Preview
-import dog.shebang.voiceoflabor.ui.VoiceOfLaborTheme
+import dog.shebang.voiceoflabor.theme.VoiceOfLaborTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

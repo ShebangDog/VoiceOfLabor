@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.ui
+package dog.shebang.voiceoflabor.theme
 
 import androidx.compose.ui.graphics.Color
 
