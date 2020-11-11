@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.theme
+package dog.shebang.voiceoflabor.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
