@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor
+package dog.shebang.voiceoflabor.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
