@@ -4,6 +4,7 @@ import android.speech.tts.Voice
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.Text
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyColumnFor
@@ -11,8 +12,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.MicNone
+import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -29,22 +34,30 @@ fun RecListScreen(navController: NavController) {
 
 
 
+    val testList = listOf("Java", "Kotlin", "PHP", "Swift")
+    val isRecording = remember { mutableStateOf(false) }
+
     Scaffold(
             topBar = {
                 TopAppBar(
                         title = { Text(text = "VoiceOfLabor") },
-                        backgroundColor = purple500
+                        backgroundColor = deepSkyBlue
                 )
             },
             floatingActionButtonPosition = FabPosition.End,
             floatingActionButton = {
                 FloatingActionButton(
                         backgroundColor = gold,
-                        icon = { Icon(asset = Icons.Default.Mic) },
-                        onClick = {})
+                        icon = {
+                            Icon(asset = if (isRecording.value) Icons.Default.MicNone else Icons.Default.Mic)
+                        },
+                        onClick = {
+                            isRecording.value = !isRecording.value
+                        })
             },
             bodyContent = {
 
+                ShowVoiceList(voiceList = testList)
 
             }
     )
@@ -68,6 +81,8 @@ fun ShowVoiceList(voiceList: List<String>) {
 @Composable
 fun ShowVoiceCard(item: String, rowModifier: Modifier) {
 
+    val isPlaying = remember { mutableStateOf(false) }
+
     Card(
             modifier = rowModifier,
             border = BorderStroke(color = Color.Black, width = Dp.Hairline),
@@ -85,8 +100,12 @@ fun ShowVoiceCard(item: String, rowModifier: Modifier) {
             )
 
             Icon(
-                    modifier = Modifier.weight(0.5f),
-                    asset = Icons.Default.PlayCircleOutline)
+                    modifier = Modifier.weight(0.5f).clickable(onClick = {
+                        isPlaying.value = !isPlaying.value
+
+                    }),
+                    asset = if (isPlaying.value) Icons.Default.PauseCircleOutline else Icons.Default.PlayCircleOutline
+            )
         }
 
     }
@@ -98,6 +117,7 @@ fun ShowVoiceCard(item: String, rowModifier: Modifier) {
 fun ShowPreview() {
 
     val testList = listOf("Java", "Kotlin", "PHP", "Swift")
+    val isRecording = remember { mutableStateOf(false) }
 
     Scaffold(
             topBar = {
@@ -110,8 +130,12 @@ fun ShowPreview() {
             floatingActionButton = {
                 FloatingActionButton(
                         backgroundColor = gold,
-                        icon = { Icon(asset = Icons.Default.Mic) },
-                        onClick = {})
+                        icon = {
+                            Icon(asset = if (isRecording.value) Icons.Default.MicNone else Icons.Default.Mic)
+                        },
+                        onClick = {
+                            isRecording.value = !isRecording.value
+                        })
             },
             bodyContent = {
 
