@@ -12,7 +12,7 @@ import dog.shebang.voiceoflabor.data.service.voice.VoicePlayer
 import dog.shebang.voiceoflabor.data.service.voice.VoiceRecorder
 
 @Suppress("UNCHECKED_CAST")
-class MainViewModelFactory(
+class VoiceViewModelFactory(
     private val context: Context
 ) : ViewModelProvider.Factory {
 
@@ -34,7 +34,7 @@ class MainViewModelFactory(
         val voiceRecorder = accessor.voiceRecorder()
         val voicePlayer = accessor.voicePlayer()
 
-        return MainViewModel(
+        return VoiceViewModel(
             voiceRepository,
             voiceRecorder,
             voicePlayer

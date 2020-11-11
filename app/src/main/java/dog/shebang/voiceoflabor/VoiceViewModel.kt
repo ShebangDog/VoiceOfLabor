@@ -8,7 +8,7 @@ import dog.shebang.voiceoflabor.model.Voice
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainViewModel(
+class VoiceViewModel(
     private val repository: VoiceRepository,
     private val voiceRecorder: VoiceRecorder,
     private val voicePlayer: VoicePlayer
