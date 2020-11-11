@@ -15,28 +15,28 @@ class VoiceViewModel(
 ) : ViewModel() {
 
     init {
-        voiceRecorder.setOnStop { mutableRecordingMode.value = false }
+        voiceRecorder.setOnStop { mutableIsRecording.value = false }
 
-        voicePlayer.setOnStop { mutablePlayerMode.value = false }
+        voicePlayer.setOnStop { mutableIsPlaying.value = false }
     }
 
-    private val mutableRecordingMode = MutableLiveData(false)
-    val recordingMode: LiveData<Boolean> = mutableRecordingMode
+    private val mutableIsRecording = MutableLiveData(false)
+    val isRecording: LiveData<Boolean> = mutableIsRecording
 
-    private val mutablePlayerMode = MutableLiveData(false)
-    val playerMode: LiveData<Boolean> = mutablePlayerMode
+    private val mutableIsPlaying = MutableLiveData(false)
+    val isPlaying: LiveData<Boolean> = mutableIsPlaying
 
     val voiceList = repository.fetchVoiceList().asLiveData()
 
     fun deployRecorder() {
-        mutableRecordingMode.value = true
+        mutableIsRecording.value = true
 
         val fileName = UUID.randomUUID().toString()
         voiceRecorder.record(fileName)
     }
 
     fun stopRecorder() = viewModelScope.launch {
-        mutableRecordingMode.value = false
+        mutableIsRecording.value = false
 
         voiceRecorder.stop()
 
@@ -44,13 +44,13 @@ class VoiceViewModel(
     }
 
     fun deployPlayer(voice: Voice) {
-        mutablePlayerMode.value = true
+        mutableIsPlaying.value = true
 
         voicePlayer.play(voice)
     }
 
     fun stopPlayer() {
-        mutablePlayerMode.value = false
+        mutableIsPlaying.value = false
 
         voicePlayer.stop()
     }
