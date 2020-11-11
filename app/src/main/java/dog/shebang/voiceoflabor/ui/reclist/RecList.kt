@@ -11,7 +11,9 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Mic
+import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.Dp
@@ -61,12 +63,26 @@ fun ShowVoiceList(voiceList: List<String>) {
     ){
         for (item in voiceList) {
             Card(
-                    modifier = Modifier.padding(20.dp).fillParentMaxWidth(),
+                    modifier = Modifier.padding(10.dp).fillParentMaxWidth(),
                     border = BorderStroke(color = Color.Black, width = Dp.Hairline),
                     shape = RoundedCornerShape(8.dp)
             ) {
-                
-                Text(text = item)
+
+                Row(
+                        modifier = Modifier.padding(10.dp),
+                        verticalAlignment= Alignment.CenterVertically
+                ) {
+                    Text(
+                            modifier = Modifier.weight(1f),
+                            text = item
+                    )
+                    
+                    Icon(
+                            modifier = Modifier.weight(0.5f),
+                            asset = Icons.Default.PlayCircleOutline)
+                    
+                }
+
 
             }
         }
