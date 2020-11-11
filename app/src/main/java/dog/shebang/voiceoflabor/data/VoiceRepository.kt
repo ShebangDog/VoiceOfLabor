@@ -1,13 +1,17 @@
 package dog.shebang.voiceoflabor.data
 
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dog.shebang.voiceoflabor.data.db.ApplicationDataBase
-import dog.shebang.voiceoflabor.data.db.InternalStorageDataSource
 import dog.shebang.voiceoflabor.data.db.VoiceEntity
 import dog.shebang.voiceoflabor.model.Voice
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
+import javax.inject.Inject
 
 interface VoiceRepository {
     fun fetchVoice(fileName: String): Flow<Voice?>
@@ -17,7 +21,7 @@ interface VoiceRepository {
     suspend fun saveVoice(fileName: String)
 }
 
-class DefaultVoiceRepository(
+class DefaultVoiceRepository @Inject constructor(
     private val database: ApplicationDataBase,
     private val internalStorageDataSource: InternalStorageDataSource
 ) : VoiceRepository {
@@ -41,4 +45,14 @@ class DefaultVoiceRepository(
         database.voiceDao().insert(VoiceEntity(uri))
     }
 
+}
+
+@Module
+@InstallIn(ApplicationComponent::class)
+abstract class VoiceRepositoryModule {
+
+    @Binds
+    abstract fun bindVoiceRepository(
+        voiceRepository: DefaultVoiceRepository
+    ): VoiceRepository
 }

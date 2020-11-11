@@ -2,19 +2,42 @@ package dog.shebang.voiceoflabor.data.service.voice
 
 import android.content.Context
 import android.media.MediaRecorder
-import dog.shebang.voiceoflabor.data.db.DefaultInternalStorageDataSource
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
+import dagger.hilt.android.qualifiers.ApplicationContext
+import dog.shebang.voiceoflabor.data.DefaultInternalStorageDataSource
 import dog.shebang.voiceoflabor.model.Uri
+import javax.inject.Inject
 
-class VoiceRecorder(context: Context) {
+typealias OnRecorderStopListener = () -> Unit
+
+interface VoiceRecorder {
+
+    var lastUri: Uri?
+
+    fun record(fileName: String)
+
+    fun stop()
+
+    fun setOnStop(onStopListener: OnRecorderStopListener)
+
+    fun removeOnStopListener()
+}
+
+class DefaultVoiceRecorder @Inject constructor(
+    @ApplicationContext context: Context
+) : VoiceRecorder {
+
     private var mediaRecorder: MediaRecorder? = null
     private var onStopListener: (() -> Unit)? = null
 
-    var lastUri: Uri? = null
-        private set
+    override var lastUri: Uri? = null
 
     private val internalStorageDataSource = DefaultInternalStorageDataSource(context)
 
-    fun record(fileName: String) {
+    override fun record(fileName: String) {
         mediaRecorder = MediaRecorder()
 
         val uri = internalStorageDataSource.formatToAccess(fileName)
@@ -33,7 +56,7 @@ class VoiceRecorder(context: Context) {
         lastUri = uri
     }
 
-    fun stop() {
+    override fun stop() {
         mediaRecorder?.apply {
             stop()
             release()
@@ -42,11 +65,21 @@ class VoiceRecorder(context: Context) {
         mediaRecorder = null
     }
 
-    fun setOnStop(listener: () -> Unit) {
-        onStopListener = listener
+    override fun setOnStop(onStopListener: () -> Unit) {
+        this.onStopListener = onStopListener
     }
 
-    fun removeListener() {
+    override fun removeOnStopListener() {
         onStopListener = null
     }
+}
+
+@Module
+@InstallIn(ApplicationComponent::class)
+abstract class VoiceRecorderModule {
+
+    @Binds
+    abstract fun bindVoiceRecorder(
+        voiceRecorder: DefaultVoiceRecorder
+    ): VoiceRecorder
 }

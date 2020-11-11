@@ -1,13 +1,33 @@
 package dog.shebang.voiceoflabor.data.service.voice
 
 import android.media.MediaPlayer
+import dagger.Binds
+import dagger.Module
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import dog.shebang.voiceoflabor.model.Voice
+import javax.inject.Inject
 
-class VoicePlayer {
+typealias OnPlayerStopListener = () -> Unit
+
+interface VoicePlayer {
+    fun play(voice: Voice)
+
+    fun stop()
+
+    fun setOnStop(onStopListener: OnPlayerStopListener)
+
+    fun removeOnStopListener()
+}
+
+class DefaultVoicePlayer @Inject constructor(
+
+) : VoicePlayer {
+
     private var mediaPlayer: MediaPlayer? = null
-    private var onStopListener: (() -> Unit)? = null
+    private var onStopListener: OnPlayerStopListener? = null
 
-    fun play(voice: Voice) {
+    override fun play(voice: Voice) {
         mediaPlayer = MediaPlayer()
 
         mediaPlayer?.apply {
@@ -16,7 +36,7 @@ class VoicePlayer {
             }
 
             setOnCompletionListener {
-                this@VoicePlayer.stop()
+                this@DefaultVoicePlayer.stop()
             }
 
             setDataSource(voice.uri.path)
@@ -24,7 +44,7 @@ class VoicePlayer {
         }
     }
 
-    fun stop() {
+    override fun stop() {
         mediaPlayer?.apply {
             stop()
             onStopListener?.invoke()
@@ -34,11 +54,21 @@ class VoicePlayer {
         mediaPlayer = null
     }
 
-    fun setOnStop(listener: () -> Unit) {
-        onStopListener = listener
+    override fun setOnStop(onStopListener: OnPlayerStopListener) {
+        this.onStopListener = onStopListener
     }
 
-    fun removeListener() {
+    override fun removeOnStopListener() {
         onStopListener = null
     }
+}
+
+@Module
+@InstallIn(ApplicationComponent::class)
+abstract class VoicePlayerModule {
+
+    @Binds
+    abstract fun bindVoicePlayer(
+        voicePlayer: DefaultVoicePlayer
+    ): VoicePlayer
 }

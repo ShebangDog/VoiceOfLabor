@@ -1,7 +1,5 @@
 package dog.shebang.voiceoflabor
 
-import android.content.Context
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import dog.shebang.voiceoflabor.data.VoiceRepository
 import dog.shebang.voiceoflabor.data.service.voice.VoicePlayer
@@ -10,24 +8,23 @@ import dog.shebang.voiceoflabor.model.Voice
 import kotlinx.coroutines.launch
 import java.util.*
 
-class MainViewModel @ViewModelInject constructor(
-    context: Context,
-    private val repository: VoiceRepository
+class MainViewModel(
+    private val repository: VoiceRepository,
+    private val voiceRecorder: VoiceRecorder,
+    private val voicePlayer: VoicePlayer
 ) : ViewModel() {
+
+    init {
+        voiceRecorder.setOnStop { mutableRecordingMode.value = false }
+
+        voicePlayer.setOnStop { mutablePlayerMode.value = false }
+    }
 
     private val mutableRecordingMode = MutableLiveData(false)
     val recordingMode: LiveData<Boolean> = mutableRecordingMode
 
     private val mutablePlayerMode = MutableLiveData(false)
     val playerMode: LiveData<Boolean> = mutablePlayerMode
-
-    private val voiceRecorder = VoiceRecorder(context).apply {
-        setOnStop { mutableRecordingMode.value = false }
-    }
-
-    private val voicePlayer = VoicePlayer().apply {
-        setOnStop { mutablePlayerMode.value = false }
-    }
 
     val voiceList = repository.fetchVoiceList().asLiveData()
 
