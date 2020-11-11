@@ -5,7 +5,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dog.shebang.voiceoflabor.data.db.ApplicationDataBase
-import dog.shebang.voiceoflabor.data.db.VoiceEntity
+import dog.shebang.voiceoflabor.data.db.voice.VoiceEntity
 import dog.shebang.voiceoflabor.model.Voice
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
@@ -23,13 +23,13 @@ interface VoiceRepository {
 
 class DefaultVoiceRepository @Inject constructor(
     private val database: ApplicationDataBase,
-    private val internalStorageDataSource: InternalStorageDataSource
+    private val internalStorageAccessor: InternalStorageAccessor
 ) : VoiceRepository {
 
     @FlowPreview
     @ExperimentalCoroutinesApi
     override fun fetchVoice(fileName: String): Flow<Voice?> {
-        val uri = internalStorageDataSource.formatToAccess(fileName)
+        val uri = internalStorageAccessor.formatToAccess(fileName)
 
         return database.voiceDao().fetch(uri).map { Voice(uri) }
     }
@@ -40,7 +40,7 @@ class DefaultVoiceRepository @Inject constructor(
         .map { list -> list.map { Voice(it.uri) } }
 
     override suspend fun saveVoice(fileName: String) {
-        val uri = internalStorageDataSource.formatToAccess(fileName)
+        val uri = internalStorageAccessor.formatToAccess(fileName)
 
         database.voiceDao().insert(VoiceEntity(uri))
     }

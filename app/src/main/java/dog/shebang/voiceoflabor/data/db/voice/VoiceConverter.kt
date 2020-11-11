@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.data.db
+package dog.shebang.voiceoflabor.data.db.voice
 
 import androidx.room.TypeConverter
 import dog.shebang.voiceoflabor.model.Uri

@@ -9,15 +9,15 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import dog.shebang.voiceoflabor.model.Uri
 import javax.inject.Inject
 
-interface InternalStorageDataSource {
+interface InternalStorageAccessor {
     val internalDirectory: String
 
     fun formatToAccess(fileName: String): Uri
 }
 
-class DefaultInternalStorageDataSource @Inject constructor(
+class DefaultInternalStorageAccessor @Inject constructor(
     @ApplicationContext context: Context
-) : InternalStorageDataSource {
+) : InternalStorageAccessor {
 
     override val internalDirectory: String = context.filesDir.path
 
@@ -26,11 +26,11 @@ class DefaultInternalStorageDataSource @Inject constructor(
 
 @Module
 @InstallIn(ApplicationComponent::class)
-abstract class InternalStorageDataSourceModule {
+abstract class InternalStorageAccessorModule {
 
     @Binds
-    abstract fun bindInternalStorageDataSource(
-        internalStorageDataSource: DefaultInternalStorageDataSource
-    ): InternalStorageDataSource
+    abstract fun bindInternalStorageAccessor(
+        internalStorageDataSource: DefaultInternalStorageAccessor
+    ): InternalStorageAccessor
 
 }

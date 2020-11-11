@@ -7,7 +7,7 @@ import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
-import dog.shebang.voiceoflabor.data.DefaultInternalStorageDataSource
+import dog.shebang.voiceoflabor.data.DefaultInternalStorageAccessor
 import dog.shebang.voiceoflabor.model.Uri
 import javax.inject.Inject
 
@@ -35,7 +35,7 @@ class DefaultVoiceRecorder @Inject constructor(
 
     override var lastUri: Uri? = null
 
-    private val internalStorageDataSource = DefaultInternalStorageDataSource(context)
+    private val internalStorageDataSource = DefaultInternalStorageAccessor(context)
 
     override fun record(fileName: String) {
         mediaRecorder = MediaRecorder()

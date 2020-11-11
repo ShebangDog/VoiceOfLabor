@@ -10,6 +10,9 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
+import dog.shebang.voiceoflabor.data.db.voice.VoiceConverter
+import dog.shebang.voiceoflabor.data.db.voice.VoiceDao
+import dog.shebang.voiceoflabor.data.db.voice.VoiceEntity
 import javax.inject.Singleton
 
 @Database(entities = [VoiceEntity::class], version = 1)
