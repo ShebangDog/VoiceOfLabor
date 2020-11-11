@@ -2,37 +2,43 @@ package dog.shebang.voiceoflabor
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.foundation.Text
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
+import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.setContent
-import androidx.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import dog.shebang.voiceoflabor.base.screen.Screen
 import dog.shebang.voiceoflabor.theme.VoiceOfLaborTheme
+import dog.shebang.voiceoflabor.ui.reclist.RecListScreen
+import dog.shebang.voiceoflabor.ui.recording.RecordingScreen
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            VoiceOfLaborTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(color = MaterialTheme.colors.background) {
-                    Greeting("Android")
-                }
-            }
+            VoiceOfLaborApp()
         }
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun VoiceOfLaborApp() {
+    VoiceOfLaborTheme(darkTheme = isSystemInDarkTheme()) {
+        AppContent()
+    }
 }
 
-@Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    VoiceOfLaborTheme {
-        Greeting("Android")
+fun AppContent() {
+    val navController = rememberNavController()
+
+    NavHost(
+        navController = navController,
+        startDestination = Screen.RecList.name
+    ) {
+
+        composable(Screen.RecList.name) { RecListScreen(navController = navController) }
+        composable(Screen.Recording.name) { RecordingScreen(navController = navController) }
     }
 }
