@@ -39,8 +39,6 @@ class VoiceViewModel(
         mutableIsRecording.value = RecordingMode.Stopping
 
         voiceRecorder.stop()
-
-
     }
 
     fun deployPlayer(voice: Voice) {
