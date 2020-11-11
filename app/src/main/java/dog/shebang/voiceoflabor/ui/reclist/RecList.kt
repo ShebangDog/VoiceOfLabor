@@ -21,10 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
 import dog.shebang.voiceoflabor.base.screen.Screen
-import dog.shebang.voiceoflabor.theme.gold
-import dog.shebang.voiceoflabor.theme.purple200
-import dog.shebang.voiceoflabor.theme.purple500
-import dog.shebang.voiceoflabor.theme.shapes
+import dog.shebang.voiceoflabor.theme.*
 
 
 @Composable
@@ -61,37 +58,66 @@ fun ShowVoiceList(voiceList: List<String>) {
             voiceList,
     contentPadding = PaddingValues(8.dp)
     ){
+        val rowModifier = Modifier.padding(10.dp).fillParentMaxWidth()
         for (item in voiceList) {
-            Card(
-                    modifier = Modifier.padding(10.dp).fillParentMaxWidth(),
-                    border = BorderStroke(color = Color.Black, width = Dp.Hairline),
-                    shape = RoundedCornerShape(8.dp)
-            ) {
-
-                Row(
-                        modifier = Modifier.padding(10.dp),
-                        verticalAlignment= Alignment.CenterVertically
-                ) {
-                    Text(
-                            modifier = Modifier.weight(1f),
-                            text = item
-                    )
-                    
-                    Icon(
-                            modifier = Modifier.weight(0.5f),
-                            asset = Icons.Default.PlayCircleOutline)
-                    
-                }
-
-
-            }
+            ShowVoiceCard(item = item, rowModifier)
         }
         }
     }
 
+@Composable
+fun ShowVoiceCard(item: String, rowModifier: Modifier) {
+
+    Card(
+            modifier = rowModifier,
+            border = BorderStroke(color = Color.Black, width = Dp.Hairline),
+            elevation = 4.dp,
+            shape = RoundedCornerShape(8.dp)
+    ) {
+
+        Row(
+                modifier = Modifier.padding(10.dp),
+                verticalAlignment= Alignment.CenterVertically
+        ) {
+            Text(
+                    modifier = Modifier.weight(1f),
+                    text = item
+            )
+
+            Icon(
+                    modifier = Modifier.weight(0.5f),
+                    asset = Icons.Default.PlayCircleOutline)
+        }
+
+    }
+
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ShowPreview() {
+
     val testList = listOf("Java", "Kotlin", "PHP", "Swift")
-    ShowVoiceList(voiceList = testList)
+
+    Scaffold(
+            topBar = {
+                TopAppBar(
+                        title = { Text(text = "VoiceOfLabor") },
+                        backgroundColor = deepSkyBlue
+                )
+            },
+            floatingActionButtonPosition = FabPosition.End,
+            floatingActionButton = {
+                FloatingActionButton(
+                        backgroundColor = gold,
+                        icon = { Icon(asset = Icons.Default.Mic) },
+                        onClick = {})
+            },
+            bodyContent = {
+
+                ShowVoiceList(voiceList = testList)
+
+            }
+    )
+
 }
