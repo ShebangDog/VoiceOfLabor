@@ -20,17 +20,23 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
+import dog.shebang.voiceoflabor.ui.VoiceViewModel
+import dog.shebang.voiceoflabor.ui.VoiceViewModelFactory
 import dog.shebang.voiceoflabor.ui.theme.deepSkyBlue
 import dog.shebang.voiceoflabor.ui.theme.gold
 
 
 @Composable
 fun RecListScreen(navController: NavController) {
-
+    val viewModel: VoiceViewModel = viewModel(
+        factory = VoiceViewModelFactory(ContextAmbient.current)
+    )
 
     val testList = listOf("Java", "Kotlin", "PHP", "Swift")
     val isRecording = remember { mutableStateOf(false) }
