@@ -24,8 +24,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
-import dog.shebang.voiceoflabor.theme.deepSkyBlue
-import dog.shebang.voiceoflabor.theme.gold
+import dog.shebang.voiceoflabor.ui.theme.deepSkyBlue
+import dog.shebang.voiceoflabor.ui.theme.gold
 
 
 @Composable
