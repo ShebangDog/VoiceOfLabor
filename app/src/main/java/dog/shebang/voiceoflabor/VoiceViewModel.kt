@@ -15,44 +15,58 @@ class VoiceViewModel(
 ) : ViewModel() {
 
     init {
-        voiceRecorder.setOnStop { mutableIsRecording.value = false }
+        voiceRecorder.setOnStop { mutableIsRecording.value = RecordingMode.Stopping }
 
-        voicePlayer.setOnStop { mutableIsPlaying.value = false }
+        voicePlayer.setOnStop { mutableIsPlaying.value = PlayingMode.Stopping }
     }
 
-    private val mutableIsRecording = MutableLiveData(false)
-    val isRecording: LiveData<Boolean> = mutableIsRecording
+    private val mutableIsRecording = MutableLiveData<RecordingMode>(RecordingMode.Stopping)
+    val recordingMode: LiveData<RecordingMode> = mutableIsRecording
 
-    private val mutableIsPlaying = MutableLiveData(false)
-    val isPlaying: LiveData<Boolean> = mutableIsPlaying
+    private val mutableIsPlaying = MutableLiveData<PlayingMode>(PlayingMode.Stopping)
+    val playingMode: LiveData<PlayingMode> = mutableIsPlaying
+
+    fun isPlaying(voice: Voice): LiveData<Boolean> = playingMode.map { playingMode ->
+        when (playingMode) {
+            is PlayingMode.Stopping -> false
+            is PlayingMode.Playing -> voice == playingMode.voice
+        }
+    }
 
     val voiceList = repository.fetchVoiceList().asLiveData()
 
     fun deployRecorder() {
-        mutableIsRecording.value = true
+        mutableIsRecording.value = RecordingMode.Recording
 
         val fileName = UUID.randomUUID().toString()
         voiceRecorder.record(fileName)
     }
 
     fun stopRecorder() = viewModelScope.launch {
-        mutableIsRecording.value = false
+        mutableIsRecording.value = RecordingMode.Stopping
 
         voiceRecorder.stop()
-
-        voiceRecorder.lastUri?.let { repository.saveVoice(it.fileName) }
     }
 
     fun deployPlayer(voice: Voice) {
-        mutableIsPlaying.value = true
+        mutableIsPlaying.value = PlayingMode.Playing(voice)
 
         voicePlayer.play(voice)
     }
 
     fun stopPlayer() {
-        mutableIsPlaying.value = false
+        mutableIsPlaying.value = PlayingMode.Stopping
 
         voicePlayer.stop()
     }
 
+    sealed class PlayingMode {
+        object Stopping : PlayingMode()
+        class Playing(val voice: Voice) : PlayingMode()
+    }
+
+    sealed class RecordingMode {
+        object Stopping : RecordingMode()
+        object Recording : RecordingMode()
+    }
 }
