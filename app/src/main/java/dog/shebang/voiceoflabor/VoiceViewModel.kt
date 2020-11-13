@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.ui
+package dog.shebang.voiceoflabor
 
 import androidx.lifecycle.*
 import dog.shebang.voiceoflabor.data.VoiceRepository

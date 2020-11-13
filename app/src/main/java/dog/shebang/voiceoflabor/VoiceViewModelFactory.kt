@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor.ui
+package dog.shebang.voiceoflabor
 
 import android.content.Context
 import androidx.lifecycle.ViewModel
