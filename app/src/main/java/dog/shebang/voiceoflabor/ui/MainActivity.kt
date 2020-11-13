@@ -1,4 +1,4 @@
-package dog.shebang.voiceoflabor
+package dog.shebang.voiceoflabor.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -9,9 +9,9 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dog.shebang.voiceoflabor.base.screen.Screen
-import dog.shebang.voiceoflabor.theme.VoiceOfLaborTheme
 import dog.shebang.voiceoflabor.ui.reclist.RecListScreen
 import dog.shebang.voiceoflabor.ui.recording.RecordingScreen
+import dog.shebang.voiceoflabor.ui.theme.VoiceOfLaborTheme
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
