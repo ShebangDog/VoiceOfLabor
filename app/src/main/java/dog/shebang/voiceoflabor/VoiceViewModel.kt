@@ -26,6 +26,13 @@ class VoiceViewModel(
     private val mutableIsPlaying = MutableLiveData<PlayingMode>(PlayingMode.Stopping)
     val playingMode: LiveData<PlayingMode> = mutableIsPlaying
 
+    fun isPlaying(voice: Voice): LiveData<Boolean> = playingMode.map { playingMode ->
+        when (playingMode) {
+            is PlayingMode.Stopping -> false
+            is PlayingMode.Playing -> voice == playingMode.voice
+        }
+    }
+
     val voiceList = repository.fetchVoiceList().asLiveData()
 
     fun deployRecorder() {
