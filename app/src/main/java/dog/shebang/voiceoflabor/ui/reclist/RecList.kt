@@ -1,12 +1,11 @@
 package dog.shebang.voiceoflabor.ui.reclist
 
-import android.speech.tts.Voice
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.ScrollableColumn
 import androidx.compose.foundation.Text
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumnFor
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
@@ -25,8 +24,8 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.ui.tooling.preview.Preview
-import dog.shebang.voiceoflabor.base.screen.Screen
-import dog.shebang.voiceoflabor.theme.*
+import dog.shebang.voiceoflabor.ui.theme.deepSkyBlue
+import dog.shebang.voiceoflabor.ui.theme.gold
 
 
 @Composable
