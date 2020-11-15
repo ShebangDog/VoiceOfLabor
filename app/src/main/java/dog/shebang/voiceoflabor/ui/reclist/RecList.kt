@@ -98,7 +98,13 @@ fun VoiceList(voiceList: List<VoiceViewModel.UiModel>, onClick: (VoiceViewModel.
         contentPadding = PaddingValues(8.dp)
     ) { item ->
 
-        VoiceCard(item = item, Modifier.padding(10.dp).fillParentMaxWidth(), onClick)
+        VoiceCard(
+            item = item,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillParentMaxWidth(),
+            onClick = onClick
+        )
     }
 
 }
@@ -107,12 +113,12 @@ fun VoiceList(voiceList: List<VoiceViewModel.UiModel>, onClick: (VoiceViewModel.
 @Composable
 fun VoiceCard(
     item: VoiceViewModel.UiModel,
-    rowModifier: Modifier = Modifier,
+    modifier: Modifier = Modifier,
     onClick: (VoiceViewModel.UiModel) -> Unit
 ) {
 
     Card(
-        modifier = rowModifier,
+        modifier = modifier,
         border = BorderStroke(color = Color.Black, width = Dp.Hairline),
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp)
@@ -128,7 +134,9 @@ fun VoiceCard(
             )
 
             Icon(
-                modifier = Modifier.weight(0.5f).clickable(onClick = { onClick(item) }),
+                modifier = Modifier
+                    .weight(0.5f)
+                    .clickable(onClick = { onClick(item) }),
                 asset = when (item.state.playingMode) {
                     is VoiceViewModel.PlayingMode.Stopping -> Icons.Default.PlayCircleOutline
                     is VoiceViewModel.PlayingMode.Playing -> Icons.Default.PauseCircleOutline
