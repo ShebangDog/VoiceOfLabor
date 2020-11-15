@@ -45,6 +45,7 @@ class VoiceViewModel(
     fun stopRecorder() = viewModelScope.launch {
         mutableIsRecording.value = RecordingMode.Stopping
 
+        voiceRecorder.lastUri?.fileName?.let { repository.saveVoice(it) }
         voiceRecorder.stop()
     }
 
