@@ -15,25 +15,32 @@ import androidx.compose.material.icons.filled.MicNone
 import androidx.compose.material.icons.filled.PauseCircleOutline
 import androidx.compose.material.icons.filled.PlayCircleOutline
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ContextAmbient
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.viewModel
 import androidx.navigation.NavController
-import androidx.ui.tooling.preview.Preview
+import dog.shebang.voiceoflabor.ui.VoiceViewModel
+import dog.shebang.voiceoflabor.ui.VoiceViewModelFactory
 import dog.shebang.voiceoflabor.ui.theme.deepSkyBlue
 import dog.shebang.voiceoflabor.ui.theme.gold
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Composable
 fun RecListScreen(navController: NavController) {
+    val viewModel: VoiceViewModel = viewModel(
+        factory = VoiceViewModelFactory(ContextAmbient.current)
+    )
 
-
-    val testList = listOf("Java", "Kotlin", "PHP", "Swift")
-    val isRecording = remember { mutableStateOf(false) }
+    val isRecording by viewModel.recordingMode.observeAsState(VoiceViewModel.RecordingMode.Stopping)
 
     Scaffold(
         topBar = {
@@ -47,42 +54,71 @@ fun RecListScreen(navController: NavController) {
             FloatingActionButton(
                 backgroundColor = gold,
                 icon = {
-                    Icon(asset = if (isRecording.value) Icons.Default.MicNone else Icons.Default.Mic)
+                    Icon(
+                        asset = when (isRecording) {
+                            is VoiceViewModel.RecordingMode.Stopping -> Icons.Default.Mic
+                            is VoiceViewModel.RecordingMode.Recording -> Icons.Default.MicNone
+                        }
+                    )
                 },
                 onClick = {
-                    isRecording.value = !isRecording.value
-                })
+                    when (isRecording) {
+                        is VoiceViewModel.RecordingMode.Stopping -> viewModel.deployRecorder()
+                        is VoiceViewModel.RecordingMode.Recording -> viewModel.stopRecorder()
+                    }
+                }
+            )
         },
         bodyContent = {
-
-            ShowVoiceList(voiceList = testList)
-
+            RecListContents(viewModel = viewModel)
         }
     )
 }
 
-
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Composable
-fun ShowVoiceList(voiceList: List<String>) {
+fun RecListContents(viewModel: VoiceViewModel) {
+    val voiceList by viewModel.voiceList.observeAsState(emptyList())
 
-    LazyColumnFor(
-        voiceList,
-        contentPadding = PaddingValues(8.dp)
-    ) {
-        val rowModifier = Modifier.padding(10.dp).fillParentMaxWidth()
-        for (item in voiceList) {
-            ShowVoiceCard(item = item, rowModifier)
+    VoiceList(voiceList = voiceList) {
+        when (it.state.playingMode) {
+            is VoiceViewModel.PlayingMode.Stopping -> viewModel.deployPlayer(it.voice)
+            is VoiceViewModel.PlayingMode.Playing -> viewModel.stopPlayer()
         }
     }
 }
 
+@ExperimentalCoroutinesApi
 @Composable
-fun ShowVoiceCard(item: String, rowModifier: Modifier) {
+fun VoiceList(voiceList: List<VoiceViewModel.UiModel>, onClick: (VoiceViewModel.UiModel) -> Unit) {
 
-    val isPlaying = remember { mutableStateOf(false) }
+    LazyColumnFor(
+        voiceList,
+        contentPadding = PaddingValues(8.dp)
+    ) { item ->
+
+        VoiceCard(
+            item = item,
+            modifier = Modifier
+                .padding(10.dp)
+                .fillParentMaxWidth(),
+            onClick = onClick
+        )
+    }
+
+}
+
+@ExperimentalCoroutinesApi
+@Composable
+fun VoiceCard(
+    item: VoiceViewModel.UiModel,
+    modifier: Modifier = Modifier,
+    onClick: (VoiceViewModel.UiModel) -> Unit
+) {
 
     Card(
-        modifier = rowModifier,
+        modifier = modifier,
         border = BorderStroke(color = Color.Black, width = Dp.Hairline),
         elevation = 4.dp,
         shape = RoundedCornerShape(8.dp)
@@ -94,52 +130,20 @@ fun ShowVoiceCard(item: String, rowModifier: Modifier) {
         ) {
             Text(
                 modifier = Modifier.weight(1f),
-                text = item
+                text = item.voice.uri.fileName
             )
 
             Icon(
-                modifier = Modifier.weight(0.5f).clickable(onClick = {
-                    isPlaying.value = !isPlaying.value
-
-                }),
-                asset = if (isPlaying.value) Icons.Default.PauseCircleOutline else Icons.Default.PlayCircleOutline
+                modifier = Modifier
+                    .weight(0.5f)
+                    .clickable(onClick = { onClick(item) }),
+                asset = when (item.state.playingMode) {
+                    is VoiceViewModel.PlayingMode.Stopping -> Icons.Default.PlayCircleOutline
+                    is VoiceViewModel.PlayingMode.Playing -> Icons.Default.PauseCircleOutline
+                }
             )
         }
 
     }
-
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ShowPreview() {
-
-    val testList = listOf("Java", "Kotlin", "PHP", "Swift")
-    val isRecording = remember { mutableStateOf(false) }
-
-    Scaffold(
-        topBar = {
-            TopAppBar(
-                title = { Text(text = "VoiceOfLabor") },
-                backgroundColor = deepSkyBlue
-            )
-        },
-        floatingActionButtonPosition = FabPosition.End,
-        floatingActionButton = {
-            FloatingActionButton(
-                backgroundColor = gold,
-                icon = {
-                    Icon(asset = if (isRecording.value) Icons.Default.MicNone else Icons.Default.Mic)
-                },
-                onClick = {
-                    isRecording.value = !isRecording.value
-                })
-        },
-        bodyContent = {
-
-            ShowVoiceList(voiceList = testList)
-
-        }
-    )
 
 }

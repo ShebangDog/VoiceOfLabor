@@ -12,8 +12,12 @@ import dog.shebang.voiceoflabor.base.screen.Screen
 import dog.shebang.voiceoflabor.ui.reclist.RecListScreen
 import dog.shebang.voiceoflabor.ui.recording.RecordingScreen
 import dog.shebang.voiceoflabor.ui.theme.VoiceOfLaborTheme
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.FlowPreview
 
 class MainActivity : AppCompatActivity() {
+    @ExperimentalCoroutinesApi
+    @FlowPreview
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -22,6 +26,8 @@ class MainActivity : AppCompatActivity() {
     }
 }
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Composable
 fun VoiceOfLaborApp() {
     VoiceOfLaborTheme(darkTheme = isSystemInDarkTheme()) {
@@ -29,6 +35,8 @@ fun VoiceOfLaborApp() {
     }
 }
 
+@ExperimentalCoroutinesApi
+@FlowPreview
 @Composable
 fun AppContent() {
     val navController = rememberNavController()
